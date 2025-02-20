@@ -1,0 +1,13 @@
+<section>
+  <h2>Blog List</h2>
+
+  <ul>
+    {% for post in posts %}
+    <li>
+      <a href="{% url 'blog_detail' post.title %}">{{ post.title}}</a>
+    </li>
+    <li>{{ post.date_posted|date:"M d, Y" }}</li>
+    <li>{{ post.description|truncatewords:40 }}</li>
+    {% endfor %}
+  </ul>
+</section>
