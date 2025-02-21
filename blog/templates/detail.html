@@ -1,5 +1,8 @@
+{% load static %}
+
 <section>
   <h2>{{ post.title }}</h2>
+  <img src="{{ post.image.url }}" alt="{{ post.title }}" />
   <p>{{ post.date_posted|date:"M d, Y" }}</p>
   <p>{{ post.description }}</p>
 </section>
