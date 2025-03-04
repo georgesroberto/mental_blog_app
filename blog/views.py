@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
+from .models import Post
+
+
 
 # Create your views here.
 def blog_list(request):
@@ -22,7 +25,7 @@ def blog_list(request):
 
     return render(request, "list.html", {"posts": posts})
 
-
+@login_required
 def blog_detail(request, title):
     post = get_object_or_404(Post, title=title)
 

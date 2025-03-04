@@ -14,7 +14,7 @@
       </li>
       <li>
         <a
-          href="{% url 'blog_detail' post.title %}"
+          href="{% url 'blog:blog_detail' post.title %}"
           class="fw-bold text-decoration-none py-2 text-dark fs-3"
           >{{ post.title}}</a
         >
@@ -31,9 +31,10 @@
       <span
         class="step-links {% if not posts.has_previous %} disabled {% endif %}"
       >
-        <a href="{% url 'blog_list' %}?page=1">first</a>
+        <a href="{% url 'blog:blog_list' %}?page=1">first</a>
         {% if posts.has_previous %}
-        <a href="{% url 'blog_list' %}?page={{ posts.previous_page_number }}"
+        <a
+          href="{% url 'blog:blog_list' %}?page={{ posts.previous_page_number }}"
           >previous</a
         >
         {% endif %}
@@ -41,12 +42,13 @@
           Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
         </span>
         {% if posts.has_next %}
-        <a href="{% url 'blog_list' %}?page={{ posts.next_page_number }}"
+        <a href="{% url 'blog:blog_list' %}?page={{ posts.next_page_number }}"
           >next</a
         >
         {% endif %}
-       
-        <a href="{% url 'blog_list' %}?page={{ posts.paginator.num_pages }}"
+
+        <a
+          href="{% url 'blog:blog_list' %}?page={{ posts.paginator.num_pages }}"
           >last</a
         >
       </span>
