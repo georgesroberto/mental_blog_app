@@ -1,32 +1,39 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView
 from .models import Post
 
 
-
 # Create your views here.
-def blog_list(request):
-    posts = Post.objects.all()
+class BlogListView(ListView):
+    model = Post
+    template_name = "list.html"
+    context_object_name = "posts"
+    paginate_by = 3
     
-    paginator = Paginator(posts, 2)
-    
-    print(f"Paginator: {paginator}")
-    
-    page = request.GET.get('page')
-    
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        context["paginator"] = paginator
 
-    return render(request, "list.html", {"posts": posts})
+        page = self.request.GET.get("page")
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+            
+        context["posts"] = posts
+        
+        return context
 
-@login_required
-def blog_detail(request, title):
-    post = get_object_or_404(Post, title=title)
+    
+class BlogDetailView(LoginRequiredMixin, DetailView):
+    model = Post
+    template_name = "detail.html"
+    context_object_name = "post"
 
-    return render(request, "detail.html", {"post": post})
+    def get_object(self):
+        return get_object_or_404(Post, title=self.kwargs['title'])
